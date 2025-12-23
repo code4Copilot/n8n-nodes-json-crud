@@ -9,6 +9,15 @@
     "crud"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/code4Copilot/n8n-nodes-json-crud",
+  "author": {
+    "name": "Hueyan Chen",
+    "email": "hueyan.chen@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code4Copilot/n8n-nodes-json-crud.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "tsc && gulp build:icons",
