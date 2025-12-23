@@ -700,7 +700,7 @@ MIT License
 ## 📧 聯絡方式
 
 如有問題或建議，請：
-- 開 Issue: https://github.com/fchart/n8n-nodes-json-crud/issues
+- 開 Issue: https://github.com/code4Copilot/n8n-nodes-json-crud/issues
 - Email: hueyan.chen@gmail.com
 
 ---
