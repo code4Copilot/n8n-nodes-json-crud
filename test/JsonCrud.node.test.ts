@@ -379,7 +379,7 @@ describe('JsonCrud Node', () => {
     });
   });
 
-  describe('DELETE Operation', () => {
+  describe('DELETE Operation - By Condition', () => {
     test('should delete records matching condition', async () => {
       const inputData: INodeExecutionData[] = [
         { json: { name: '張三', status: '在職' } },
@@ -389,6 +389,7 @@ describe('JsonCrud Node', () => {
 
       const parameters = {
         operation: 'delete',
+        deleteMode: 'condition',
         deleteConditions: {
           conditions: [{ field: 'status', operator: 'equals', value: '離職' }],
         },
@@ -401,6 +402,145 @@ describe('JsonCrud Node', () => {
       expect(result[0]).toHaveLength(2);
       expect(result[0][0].json.name).toBe('張三');
       expect(result[0][1].json.name).toBe('王五');
+    });
+
+    test('should delete records with multiple conditions (AND)', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', department: '技術部', salary: 50000 } },
+        { json: { name: '李四', department: '技術部', salary: 45000 } },
+        { json: { name: '王五', department: '業務部', salary: 55000 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'condition',
+        deleteConditions: {
+          conditions: [
+            { field: 'department', operator: 'equals', value: '技術部' },
+            { field: 'salary', operator: 'lessThan', value: '48000' },
+          ],
+        },
+        deleteConditionLogic: 'and',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(2);
+      expect(result[0][0].json.name).toBe('張三');
+      expect(result[0][1].json.name).toBe('王五');
+    });
+  });
+
+  describe('DELETE Operation - By Row Index', () => {
+    test('should delete single row by index', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+        { json: { name: '王五', age: 28 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'rowIndex',
+        deleteRowIndex: '1',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(2);
+      expect(result[0][0].json.name).toBe('張三');
+      expect(result[0][1].json.name).toBe('王五');
+    });
+
+    test('should delete range of rows by index', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+        { json: { name: '王五', age: 28 } },
+        { json: { name: '趙六', age: 35 } },
+        { json: { name: '錢七', age: 32 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'rowIndex',
+        deleteRowIndex: '1-3',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(2);
+      expect(result[0][0].json.name).toBe('張三');
+      expect(result[0][1].json.name).toBe('錢七');
+    });
+
+    test('should delete multiple non-continuous rows by index', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+        { json: { name: '王五', age: 28 } },
+        { json: { name: '趙六', age: 35 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'rowIndex',
+        deleteRowIndex: '0,2',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(2);
+      expect(result[0][0].json.name).toBe('李四');
+      expect(result[0][1].json.name).toBe('趙六');
+    });
+
+    test('should delete combined row indices (range and specific)', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+        { json: { name: '王五', age: 28 } },
+        { json: { name: '趙六', age: 35 } },
+        { json: { name: '錢七', age: 32 } },
+        { json: { name: '孫八', age: 29 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'rowIndex',
+        deleteRowIndex: '0-1,4',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(3);
+      expect(result[0][0].json.name).toBe('王五');
+      expect(result[0][1].json.name).toBe('趙六');
+      expect(result[0][2].json.name).toBe('孫八');
+    });
+
+    test('should handle out of bounds indices gracefully', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+      ];
+
+      const parameters = {
+        operation: 'delete',
+        deleteMode: 'rowIndex',
+        deleteRowIndex: '0,5,10',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(1);
+      expect(result[0][0].json.name).toBe('李四');
     });
   });
 

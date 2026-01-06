@@ -303,11 +303,32 @@ export class JsonCrud implements INodeType {
 				],
 			},
 			{
+				displayName: 'Delete Mode',
+				name: 'deleteMode',
+				type: 'options',
+				displayOptions: { show: { operation: ['delete'] } },
+				options: [
+					{ name: 'By Condition', value: 'condition', description: 'Delete records that match conditions' },
+					{ name: 'By Row Index', value: 'rowIndex', description: 'Delete specific rows by index' },
+				],
+				default: 'condition',
+			},
+			{
+				displayName: 'Row Index',
+				name: 'deleteRowIndex',
+				type: 'string',
+				displayOptions: { show: { operation: ['delete'], deleteMode: ['rowIndex'] } },
+				default: '0',
+				required: true,
+				description: 'Row index to delete (0-based). Supports single (0), range (0-5), or multiple (0,2,4)',
+				placeholder: 'e.g., 0 or 0-5 or 0,2,4',
+			},
+			{
 				displayName: 'Delete Conditions',
 				name: 'deleteConditions',
 				type: 'fixedCollection',
 				typeOptions: { multipleValues: true },
-				displayOptions: { show: { operation: ['delete'] } },
+				displayOptions: { show: { operation: ['delete'], deleteMode: ['condition'] } },
 				default: {},
 				options: [
 					{
@@ -344,7 +365,7 @@ export class JsonCrud implements INodeType {
 				displayName: 'Condition Logic',
 				name: 'deleteConditionLogic',
 				type: 'options',
-				displayOptions: { show: { operation: ['delete'] } },
+				displayOptions: { show: { operation: ['delete'], deleteMode: ['condition'] } },
 				options: [
 					{ name: 'AND', value: 'and' },
 					{ name: 'OR', value: 'or' },
@@ -696,6 +717,30 @@ export class JsonCrud implements INodeType {
 	}
 
 	private async handleDelete(this: IExecuteFunctions, items: INodeExecutionData[]): Promise<INodeExecutionData[]> {
+		const deleteMode = this.getNodeParameter('deleteMode', 0) as string;
+		const instance = new JsonCrud();
+
+		if (deleteMode === 'rowIndex') {
+			// Row Index-based delete
+			return instance.handleRowIndexDelete.call(this, items);
+		} else {
+			// Condition-based delete (original)
+			return instance.handleConditionDelete.call(this, items);
+		}
+	}
+
+	private handleRowIndexDelete(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
+		const rowIndexStr = this.getNodeParameter('deleteRowIndex', 0) as string;
+		const instance = new JsonCrud();
+
+		// Parse row indices to delete
+		const rowIndicesToDelete = instance.parseRowIndices(rowIndexStr, items.length);
+
+		// Filter out items at specified indices (keep items NOT in the delete list)
+		return items.filter((item, index) => !rowIndicesToDelete.includes(index));
+	}
+
+	private handleConditionDelete(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
 		const conditions = this.getNodeParameter('deleteConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('deleteConditionLogic', 0) as string;
 		
