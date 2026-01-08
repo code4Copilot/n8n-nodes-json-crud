@@ -1,51 +1,51 @@
-# 版本 1.1.1 更新摘要
+# Version 1.1.1 Update Summary
 
-## 🐛 錯誤修正：Case Sensitive 功能改善
+## 🐛 Bug Fix: Case Sensitive Feature Improvement
 
-### 修正內容
-此版本修正了 **Case Sensitive**（大小寫敏感）選項相關的錯誤，確保所有字串比較操作都能正確處理大小寫敏感設定。
+### Fix Details
+This version fixes bugs related to the **Case Sensitive** option, ensuring all string comparison operations correctly handle case sensitivity settings.
 
-### 影響範圍
+### Affected Scope
 
-**受影響的操作：**
-- **Read** 操作的條件篩選
-- **Update** 操作的條件更新
-- **Delete** 操作的條件刪除
+**Affected Operations:**
+- **Read** operation's conditional filtering
+- **Update** operation's conditional updates
+- **Delete** operation's conditional deletion
 
-**受影響的運算子：**
-| 運算子 | 說明 |
-|--------|------|
-| `equals` | 等於 |
-| `notEquals` | 不等於 |
-| `contains` | 包含 |
-| `notContains` | 不包含 |
-| `startsWith` | 開頭是 |
-| `endsWith` | 結尾是 |
+**Affected Operators:**
+| Operator | Description |
+|----------|-------------|
+| `equals` | Equals |
+| `notEquals` | Not equals |
+| `contains` | Contains |
+| `notContains` | Not contains |
+| `startsWith` | Starts with |
+| `endsWith` | Ends with |
 
-### 修正說明
+### Fix Description
 
-**修正前的問題：**
-- Case Sensitive 選項在某些情況下無法正確套用
-- 字串比較可能與預期的大小寫敏感行為不一致
+**Problem Before Fix:**
+- Case Sensitive option couldn't be correctly applied in some cases
+- String comparisons might not behave consistently with expected case sensitivity
 
-**修正後的行為：**
-- ✅ Case Sensitive = `true`：嚴格區分大小寫
+**Behavior After Fix:**
+- ✅ Case Sensitive = `true`: Strictly distinguish case
   ```
   "Apple" ≠ "apple"
   "APPLE" ≠ "Apple"
   ```
 
-- ✅ Case Sensitive = `false`：忽略大小寫（預設）
+- ✅ Case Sensitive = `false`: Ignore case (default)
   ```
   "Apple" = "apple" = "APPLE"
   "Test" = "test" = "TEST"
   ```
 
-### 使用範例
+### Usage Examples
 
-#### Read 操作示例
+#### Read Operation Example
 
-**區分大小寫查詢：**
+**Case-sensitive query:**
 ```json
 {
   "operation": "Read",
@@ -59,9 +59,9 @@
   ]
 }
 ```
-結果：只會找到 "Apple"，不會找到 "apple" 或 "APPLE"
+Result: Will only find "Apple", not "apple" or "APPLE"
 
-**不區分大小寫查詢：**
+**Case-insensitive query:**
 ```json
 {
   "operation": "Read",
@@ -75,11 +75,11 @@
   ]
 }
 ```
-結果：會找到 "Apple"、"apple"、"APPLE"、"Pineapple" 等
+Result: Will find "Apple", "apple", "APPLE", "Pineapple", etc.
 
-#### Update 操作示例
+#### Update Operation Example
 
-**區分大小寫更新：**
+**Case-sensitive update:**
 ```json
 {
   "operation": "Update",
@@ -92,52 +92,52 @@
   "updates": { "verified": true }
 }
 ```
-結果：只會更新 status = "Active" 的記錄，不會更新 "active" 或 "ACTIVE"
+Result: Will only update records with status = "Active", not "active" or "ACTIVE"
 
-### 測試驗證
+### Test Verification
 
-所有 Case Sensitive 相關的單元測試均已通過：
+All Case Sensitive related unit tests passed:
 
-**Read 操作：**
+**Read Operations:**
 - ✅ equals operator (case sensitive)
 - ✅ notEquals operator (case sensitive)
 - ✅ contains operator (case sensitive)
 - ✅ startsWith operator (case sensitive)
 - ✅ endsWith operator (case sensitive)
 
-**Update 操作：**
+**Update Operations:**
 - ✅ equals operator (case sensitive)
 - ✅ contains operator (case sensitive)
 
-**Delete 操作：**
+**Delete Operations:**
 - ✅ equals operator (case sensitive)
 - ✅ notEquals operator (case sensitive)
 - ✅ contains operator (case sensitive)
 
-**所有 26 個測試全部通過！**
+**All 26 tests passed!**
 
-### 相容性說明
+### Compatibility Notes
 
-- **Breaking Changes**: 無
-- **向後相容**: 完全相容
-- **建議升級**: 建議所有使用 Case Sensitive 功能的用戶升級
+- **Breaking Changes**: None
+- **Backward Compatible**: Fully compatible
+- **Upgrade Recommendation**: Recommended for all users using Case Sensitive feature
 
-### 版本資訊
+### Version Information
 
-- **版本號**: 1.1.0 → 1.1.1
-- **發布日期**: 2026-01-08
-- **類型**: Bug Fix（錯誤修正）
+- **Version**: 1.1.0 → 1.1.1
+- **Release Date**: 2026-01-08
+- **Type**: Bug Fix
 
 ---
 
-## 立即升級
+## Upgrade Now
 
 ```bash
-# 更新到最新版本
+# Update to latest version
 npm install n8n-nodes-json-crud@latest
 
-# 或指定版本
+# Or specify version
 npm install n8n-nodes-json-crud@1.1.1
 ```
 
-**享受更穩定的 Case Sensitive 功能！** 🎯
+**Enjoy more stable Case Sensitive functionality!** 🎯

@@ -1,96 +1,96 @@
-# 版本 1.1.0 更新摘要
+# Version 1.1.0 Update Summary
 
-## 🎉 新功能：Delete by Row Index（列索引刪除）
+## 🎉 New Feature: Delete by Row Index
 
-### 功能說明
-Delete 操作現在支援**列索引刪除模式**，與 Update 的 Cell Position 功能保持一致的設計。您可以像在 Excel 中一樣，精確指定要刪除的列。
+### Feature Description
+The Delete operation now supports **Row Index Delete mode**, maintaining consistent design with Update's Cell Position feature. You can precisely specify rows to delete just like in Excel.
 
-### 使用方式
+### Usage
 
-**基本操作：**
+**Basic Operation:**
 - Operation: `Delete`
 - Delete Mode: `By Row Index`
-- Row Index: 輸入要刪除的列索引
+- Row Index: Enter row indexes to delete
 
-**支援格式：**
-| 格式 | 說明 | 範例 |
-|------|------|------|
-| 單一列 | `0` | 刪除第 1 列 |
-| 範圍 | `0-5` | 刪除第 1-6 列 |
-| 多個列 | `0,2,4` | 刪除第 1,3,5 列 |
-| 組合 | `0-2,5,7-9` | 刪除第 1-3,6,8-10 列 |
+**Supported Formats:**
+| Format | Description | Example |
+|--------|-------------|---------|
+| Single row | `0` | Delete row 1 |
+| Range | `0-5` | Delete rows 1-6 |
+| Multiple rows | `0,2,4` | Delete rows 1,3,5 |
+| Combined | `0-2,5,7-9` | Delete rows 1-3,6,8-10 |
 
-### 使用情境
+### Use Cases
 
-1. **移除 Excel 表頭**
+1. **Remove Excel Header**
    ```
    Row Index: 0
-   → 刪除第 1 列（表頭）
+   → Delete row 1 (header)
    ```
 
-2. **清理測試資料**
+2. **Clean Test Data**
    ```
    Row Index: 0,5,10,15
-   → 刪除分散在各處的測試資料
+   → Delete scattered test data
    ```
 
-3. **移除報表的備註列**
+3. **Remove Report Note Rows**
    ```
    Row Index: 97-99
-   → 刪除最後 3 列
+   → Delete last 3 rows
    ```
 
-4. **組合刪除**
+4. **Combined Delete**
    ```
    Row Index: 0-2,50-55,99
-   → 一次刪除多個不連續的範圍
+   → Delete multiple non-contiguous ranges at once
    ```
 
-### 與條件刪除的比較
+### Comparison with Conditional Delete
 
-| 特性 | By Row Index | By Condition |
-|------|-------------|--------------|
-| 定位方式 | 列位置（0-based） | 資料內容 |
-| 使用時機 | 知道確切位置 | 根據條件判斷 |
-| 適用場景 | 表頭、固定位置錯誤 | 離職員工、過期記錄 |
-| 範圍支援 | ✅ 支援靈活組合 | ❌ 需符合條件 |
+| Feature | By Row Index | By Condition |
+|---------|--------------|--------------|
+| Positioning | Row position (0-based) | Data content |
+| When to use | Know exact position | Based on condition judgment |
+| Use cases | Headers, fixed position errors | Resigned employees, expired records |
+| Range support | ✅ Support flexible combination | ❌ Need to match conditions |
 
-### 測試覆蓋
+### Test Coverage
 
-新增 6 個完整的單元測試：
-- ✅ 刪除單一列
-- ✅ 刪除範圍列
-- ✅ 刪除多個不連續列
-- ✅ 組合刪除（範圍+特定列）
-- ✅ 超出範圍處理
-- ✅ 條件刪除（原有功能）
+Added 6 complete unit tests:
+- ✅ Delete single row
+- ✅ Delete range rows
+- ✅ Delete multiple non-contiguous rows
+- ✅ Combined delete (range + specific rows)
+- ✅ Out-of-range handling
+- ✅ Conditional delete (existing feature)
 
-**所有 26 個測試全部通過！**
+**All 26 tests passed!**
 
-### 文件更新
+### Documentation Updates
 
-- ✅ README.md：新增詳細說明和範例
-- ✅ CHANGELOG.md：記錄版本更新
-- ✅ 單元測試：完整測試覆蓋
-- ✅ 疑難排解：新增常見問題解答
+- ✅ README.md: Added detailed descriptions and examples
+- ✅ CHANGELOG.md: Recorded version updates
+- ✅ Unit tests: Complete test coverage
+- ✅ Troubleshooting: Added FAQ
 
-### 版本資訊
+### Version Information
 
-- **版本號**: 1.0.2 → 1.1.0
-- **發布日期**: 2026-01-06
-- **Breaking Changes**: 無（向後相容）
+- **Version**: 1.0.2 → 1.1.0
+- **Release Date**: 2026-01-06
+- **Breaking Changes**: None (backward compatible)
 
 ---
 
-## 立即體驗
+## Try It Now
 
 ```bash
-# 更新到最新版本
+# Update to latest version
 npm install n8n-nodes-json-crud@latest
 
-# 或從原始碼編譯
+# Or build from source
 npm run build
 npm test
 ```
 
-**快速開始使用 Delete by Row Index！** 🚀
+**Start using Delete by Row Index now!** 🚀

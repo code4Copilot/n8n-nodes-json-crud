@@ -1,348 +1,348 @@
 # n8n-nodes-json-crud
 
-這是一個 n8n 社群節點，讓您輕鬆對 JSON 資料執行 CRUD（新增、讀取、更新、刪除）操作。
+This is an n8n community node that allows you to easily perform CRUD (Create, Read, Update, Delete) operations on JSON data.
 
-**特別適合處理從 Excel 轉換而來的 JSON 資料！** 
+**Especially suitable for handling JSON data converted from Excel!**
 
-## 🎯 為什麼需要這個節點？
+## 🎯 Why Do You Need This Node?
 
-當您使用 n8n 處理 Excel 檔案時，通常需要：
-1. 使用 `Extract from File` 將 Excel 轉為 JSON
-2. 組合多個節點（Filter、Edit Fields、Code 等）來處理資料
-3. 使用 `Convert to File` 轉回 Excel
+When processing Excel files with n8n, you typically need to:
+1. Use `Extract from File` to convert Excel to JSON
+2. Combine multiple nodes (Filter, Edit Fields, Code, etc.) to process data
+3. Use `Convert to File` to convert back to Excel
 
-**這個節點簡化了第 2 步**，將多個操作整合在一個節點中，對初學者更友好！
+**This node simplifies Step 2**, integrating multiple operations into a single node, making it more beginner-friendly!
 
-## ✨ 功能特色
+## ✨ Features
 
-### 📝 CREATE（新增）
-- 新增單筆或多筆資料
-- 選擇加在最前或最後
-- 支援 JSON 格式輸入
+### 📝 CREATE
+- Add single or multiple records
+- Choose to prepend or append
+- Support JSON format input
 
-### 🔍 READ（讀取/篩選）
-- **Filter（篩選）**：12 種比較運算子，支援 AND/OR 邏輯
-- **Sort（排序）**：升序或降序排序
-- **Search（搜尋）**：全文搜尋或指定欄位搜尋
-- **Limit（限制）**：分頁功能，支援 offset
-- **By Cell Position（儲存格讀取）**：類似 Excel 的精確讀取
-  - 支援單一列：`0`（第 1 列）
-  - 支援範圍：`0-5`（第 1-6 列）
-  - 支援多個列：`0,2,4`（第 1,3,5 列）
-  - 支援組合：`0-2,5,7-9`（第 1-3,6,8-10 列）
-  - 可選擇特定欄位或讀取全部欄位
+### 🔍 READ (Filter/Query)
+- **Filter**: 12 comparison operators with AND/OR logic support
+- **Sort**: Ascending or descending order
+- **Search**: Full-text or field-specific search
+- **Limit**: Pagination with offset support
+- **By Cell Position**: Excel-like precise reading
+  - Single row: `0` (row 1)
+  - Range: `0-5` (rows 1-6)
+  - Multiple rows: `0,2,4` (rows 1,3,5)
+  - Combined: `0-2,5,7-9` (rows 1-3,6,8-10)
+  - Select specific fields or read all fields
 
-### ✏️ UPDATE（更新）
-- **條件更新**：根據條件批量更新多個欄位
-- **儲存格更新**：類似 Excel 的 A1/B2 定位方式更新指定儲存格
-  - 支援單一列：`0`（第 1 列）
-  - 支援範圍：`0-5`（第 1-6 列）
-  - 支援多個列：`0,2,4`（第 1,3,5 列）
-  - 支援組合：`0-2,5,7-9`（第 1-3,6,8-10 列）
-- 支援表達式計算
+### ✏️ UPDATE
+- **Conditional Update**: Batch update multiple fields based on conditions
+- **Cell Update**: Excel-like A1/B2 positioning to update specific cells
+  - Single row: `0` (row 1)
+  - Range: `0-5` (rows 1-6)
+  - Multiple rows: `0,2,4` (rows 1,3,5)
+  - Combined: `0-2,5,7-9` (rows 1-3,6,8-10)
+- Support expression calculations
 
-### 🗑️ DELETE（刪除）
-- **條件刪除**：根據條件批量刪除符合條件的資料
-- **列索引刪除**：類似 Excel 的精確刪除指定列
-  - 支援單一列：`0`（第 1 列）
-  - 支援範圍：`0-5`（第 1-6 列）
-  - 支援多個列：`0,2,4`（第 1,3,5 列）
-  - 支援組合：`0-2,5,7-9`（第 1-3,6,8-10 列）
-- 支援多條件組合
-- 保留不符合條件的資料
+### 🗑️ DELETE
+- **Conditional Delete**: Batch delete records based on conditions
+- **Row Index Delete**: Excel-like precise deletion of specific rows
+  - Single row: `0` (row 1)
+  - Range: `0-5` (rows 1-6)
+  - Multiple rows: `0,2,4` (rows 1,3,5)
+  - Combined: `0-2,5,7-9` (rows 1-3,6,8-10)
+- Support multiple condition combinations
+- Preserve records that don't match conditions
 
-### 🔄 REMOVE DUPLICATES（去重）
-- 根據指定欄位去重
-- 或比較所有欄位去重
+### 🔄 REMOVE DUPLICATES
+- Remove duplicates based on specific fields
+- Or compare all fields for deduplication
 
-### 📊 STATISTICS（統計）
-- 計算 count、sum、avg、min、max
-- 支援分組統計
-- 快速產生報表資料
+### 📊 STATISTICS
+- Calculate count, sum, avg, min, max
+- Support group statistics
+- Quickly generate report data
 
-## 📦 安裝
+## 📦 Installation
 
-### 方法 1：從 npm 安裝（發布後）
+### Method 1: Install from npm (After publication)
 ```bash
 npm install n8n-nodes-json-crud
 ```
 
-### 方法 2：從 GitHub 安裝
+### Method 2: Install from GitHub
 ```bash
 cd ~/.n8n/nodes
 npm install git+https://github.com/fchart/n8n-nodes-json-crud.git
 ```
 
-### 方法 3：手動安裝（開發用）
+### Method 3: Manual Installation (For development)
 ```bash
-# 1. Clone 專案
+# 1. Clone the project
 git clone https://github.com/fchart/n8n-nodes-json-crud.git
 cd n8n-nodes-json-crud
 
-# 2. 安裝依賴
+# 2. Install dependencies
 npm install
 
-# 3. 編譯
+# 3. Build
 npm run build
 
-# 4. 連結到 n8n
+# 4. Link to n8n
 npm link
 cd ~/.n8n
 npm link n8n-nodes-json-crud
 
-# 5. 重啟 n8n
+# 5. Restart n8n
 ```
 
-## 🚀 使用範例
+## 🚀 Usage Examples
 
-### 範例 1：處理員工 Excel 檔案
+### Example 1: Processing Employee Excel File
 
 ```
 ┌─────────────────┐
-│ Read Binary File│  讀取 employees.xlsx
+│ Read Binary File│  Read employees.xlsx
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Extract from    │  轉換為 JSON
+│ Extract from    │  Convert to JSON
 │ File (XLSX)     │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ JSON CRUD       │  操作：Filter
-│ 篩選技術部       │  條件：部門 = "技術部"
+│ JSON CRUD       │  Operation: Filter
+│ Filter Tech Dept│  Condition: Department = "Tech"
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ JSON CRUD       │  操作：Update
-│ 加薪 10%        │  更新：薪資 = 薪資 * 1.1
+│ JSON CRUD       │  Operation: Update
+│ 10% Raise       │  Update: Salary = Salary * 1.1
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ JSON CRUD       │  操作：Sort
-│ 薪資排序         │  欄位：薪資（降序）
+│ JSON CRUD       │  Operation: Sort
+│ Sort by Salary  │  Field: Salary (Descending)
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Convert to File │  轉回 Excel
+│ Convert to File │  Convert back to Excel
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│ Write Binary    │  儲存檔案
+│ Write Binary    │  Save file
 │ File            │
 └─────────────────┘
 ```
 
-### 範例 2：新增資料
+### Example 2: Add Data
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Create`
 - Position: `Append`
 - Data to Add:
 ```json
 {
-  "員工編號": "E0099",
-  "姓名": "王小明",
-  "部門": "技術部",
-  "薪資": 50000
+  "EmployeeID": "E0099",
+  "Name": "John Doe",
+  "Department": "Tech",
+  "Salary": 50000
 }
 ```
 
-或批量新增：
+Or batch add:
 ```json
 [
-  {"姓名": "張三", "部門": "業務部", "薪資": 45000},
-  {"姓名": "李四", "部門": "行政部", "薪資": 40000}
+  {"Name": "Alice", "Department": "Sales", "Salary": 45000},
+  {"Name": "Bob", "Department": "Admin", "Salary": 40000}
 ]
 ```
 
-### 範例 3：篩選資料
+### Example 3: Filter Data
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `Filter`
 - Conditions:
-  - 條件 1: 部門 `equals` "技術部"
-  - 條件 2: 薪資 `greater than` 45000
+  - Condition 1: Department `equals` "Tech"
+  - Condition 2: Salary `greater than` 45000
 - Condition Logic: `AND`
 
-結果：只返回技術部且薪資大於 45000 的員工
+Result: Returns only Tech department employees with salary > 45000
 
-### 範例 3-1：⭐ 儲存格讀取（類似 Excel）
+### Example 3-1: ⭐ Cell Position Read (Excel-like)
 
-#### 情境 1：讀取單一列的所有欄位
-**操作設定：**
+#### Scenario 1: Read all fields of a single row
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `By Cell Position`
-- Row Index: `0`（第 1 列）
-- Field Names: 留空（讀取所有欄位）
+- Row Index: `0` (row 1)
+- Field Names: Leave empty (read all fields)
 
-結果：只返回第 1 列的完整資料
+Result: Returns complete data of row 1
 
-#### 情境 2：讀取範圍列的特定欄位
-**操作設定：**
+#### Scenario 2: Read specific fields of a range
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `By Cell Position`
-- Row Index: `0-4`（第 1-5 列）
-- Field Names: `姓名,薪資`
+- Row Index: `0-4` (rows 1-5)
+- Field Names: `Name,Salary`
 
-結果：返回第 1-5 列，但每列只包含姓名和薪資兩個欄位
+Result: Returns rows 1-5, but each row only contains Name and Salary fields
 
-#### 情境 3：讀取多個不連續列
-**操作設定：**
+#### Scenario 3: Read multiple non-contiguous rows
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `By Cell Position`
-- Row Index: `0,5,10`（第 1,6,11 列）
-- Field Names: 留空
+- Row Index: `0,5,10` (rows 1,6,11)
+- Field Names: Leave empty
 
-結果：返回第 1,6,11 列的完整資料
+Result: Returns complete data of rows 1, 6, and 11
 
-#### 情境 4：提取表頭和資料範圍
-**操作設定：**
+#### Scenario 4: Extract header and data range
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `By Cell Position`
-- Row Index: `0-2,10-12`（第 1-3 和 11-13 列）
-- Field Names: `姓名,部門,薪資`
+- Row Index: `0-2,10-12` (rows 1-3 and 11-13)
+- Field Names: `Name,Department,Salary`
 
-結果：返回第 1-3 列和第 11-13 列，只包含指定的三個欄位
+Result: Returns rows 1-3 and 11-13, containing only the specified three fields
 
-### 範例 4：條件更新資料
+### Example 4: Conditional Update
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Condition`
 - Update Conditions:
-  - 部門 `equals` "技術部"
+  - Department `equals` "Tech"
 - Fields to Update:
-  - 欄位：薪資，值：`{{ $json.薪資 * 1.15 }}`
-  - 欄位：更新日期，值：`{{ $now }}`
+  - Field: Salary, Value: `{{ $json.Salary * 1.15 }}`
+  - Field: UpdateDate, Value: `{{ $now }}`
 
-結果：技術部員工薪資增加 15%
+Result: Tech department employee salaries increased by 15%
 
-### 範例 5：⭐ 儲存格更新（類似 Excel）
+### Example 5: ⭐ Cell Update (Excel-like)
 
-#### 情境 1：更新單一儲存格
-**操作設定：**
+#### Scenario 1: Update single cell
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Cell Position`
-- Row Index: `0`（第 1 列，0-based）
-- Field Name: `薪資`
+- Row Index: `0` (row 1, 0-based)
+- Field Name: `Salary`
 - New Value: `60000`
 
-結果：只更新第 1 列的薪資欄位為 60000
+Result: Updates only the Salary field of row 1 to 60000
 
-#### 情境 2：更新範圍儲存格
-**操作設定：**
+#### Scenario 2: Update range cells
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Cell Position`
-- Row Index: `0-4`（第 1-5 列）
-- Field Name: `部門`
-- New Value: `技術部`
+- Row Index: `0-4` (rows 1-5)
+- Field Name: `Department`
+- New Value: `Tech`
 
-結果：第 1-5 列的部門欄位全部更新為「技術部」
+Result: Updates Department field of rows 1-5 to "Tech"
 
-#### 情境 3：更新多個不連續儲存格
-**操作設定：**
+#### Scenario 3: Update multiple non-contiguous cells
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Cell Position`
-- Row Index: `0,2,4,6`（第 1,3,5,7 列）
-- Field Name: `狀態`
-- New Value: `已審核`
+- Row Index: `0,2,4,6` (rows 1,3,5,7)
+- Field Name: `Status`
+- New Value: `Approved`
 
-結果：只更新第 1,3,5,7 列的狀態欄位
+Result: Updates Status field of rows 1,3,5,7 only
 
-#### 情境 4：組合範圍和單一儲存格
-**操作設定：**
+#### Scenario 4: Combined range and single cells
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Cell Position`
-- Row Index: `0-2,5,8-10`（第 1-3,6,9-11 列）
-- Field Name: `標記`
-- New Value: `重要`
+- Row Index: `0-2,5,8-10` (rows 1-3,6,9-11)
+- Field Name: `Flag`
+- New Value: `Important`
 
-結果：更新第 1-3,6,9-11 列的標記欄位
+Result: Updates Flag field of rows 1-3,6,9-11
 
-#### 情境 5：使用表達式更新特定列
-**操作設定：**
+#### Scenario 5: Use expression to update specific rows
+**Operation Settings:**
 - Operation: `Update`
 - Update Mode: `By Cell Position`
 - Row Index: `0`
-- Field Name: `薪資`
-- New Value: `{{ $json.薪資 * 1.2 }}`
+- Field Name: `Salary`
+- New Value: `{{ $json.Salary * 1.2 }}`
 
-結果：第 1 列的薪資增加 20%
+Result: Row 1 salary increased by 20%
 
-### 範例 6：條件刪除資料
+### Example 6: Conditional Delete
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Delete`
 - Delete Mode: `By Condition`
 - Delete Conditions:
-  - 狀態 `equals` "離職"
+  - Status `equals` "Resigned"
 
-結果：移除所有離職員工的資料
+Result: Removes all resigned employee records
 
-### 範例 6-1：⭐ 列索引刪除（類似 Excel）
+### Example 6-1: ⭐ Row Index Delete (Excel-like)
 
-#### 情境 1：刪除單一列
-**操作設定：**
+#### Scenario 1: Delete single row
+**Operation Settings:**
 - Operation: `Delete`
 - Delete Mode: `By Row Index`
-- Row Index: `0`（第 1 列）
+- Row Index: `0` (row 1)
 
-結果：刪除第 1 列資料（通常是測試資料或表頭）
+Result: Deletes row 1 data (usually test data or header)
 
-#### 情境 2：刪除範圍列
-**操作設定：**
+#### Scenario 2: Delete range rows
+**Operation Settings:**
 - Operation: `Delete`
 - Delete Mode: `By Row Index`
-- Row Index: `5-9`（第 6-10 列）
+- Row Index: `5-9` (rows 6-10)
 
-結果：刪除第 6-10 列的資料
+Result: Deletes rows 6-10 data
 
-#### 情境 3：刪除多個不連續列
-**操作設定：**
+#### Scenario 3: Delete multiple non-contiguous rows
+**Operation Settings:**
 - Operation: `Delete`
 - Delete Mode: `By Row Index`
-- Row Index: `0,5,10,15`（第 1,6,11,16 列）
+- Row Index: `0,5,10,15` (rows 1,6,11,16)
 
-結果：只刪除指定的 4 列資料，其他資料保留
+Result: Deletes only the specified 4 rows, preserves other data
 
-#### 情境 4：組合刪除
-**操作設定：**
+#### Scenario 4: Combined delete
+**Operation Settings:**
 - Operation: `Delete`
 - Delete Mode: `By Row Index`
-- Row Index: `0-2,10-12,20`（第 1-3,11-13,21 列）
+- Row Index: `0-2,10-12,20` (rows 1-3,11-13,21)
 
-結果：刪除第 1-3 列、第 11-13 列和第 21 列
+Result: Deletes rows 1-3, rows 11-13, and row 21
 
-### 範例 7：搜尋功能
+### Example 7: Search Functionality
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Read`
 - Read Mode: `Search`
-- Search Field: 留空（搜尋所有欄位）
-- Search Value: "工程師"
+- Search Field: Leave empty (search all fields)
+- Search Value: "Engineer"
 - Case Sensitive: false
 
-結果：返回任何欄位包含「工程師」的資料
+Result: Returns records containing "Engineer" in any field
 
-### 範例 8：分組統計
+### Example 8: Group Statistics
 
-**操作設定：**
+**Operation Settings:**
 - Operation: `Statistics`
-- Statistics Field: `薪資`
-- Group By Field: `部門`
+- Statistics Field: `Salary`
+- Group By Field: `Department`
 
-結果：
+Result:
 ```json
 [
   {
-    "group": "技術部",
+    "group": "Tech",
     "count": 15,
     "sum": 750000,
     "avg": 50000,
@@ -350,7 +350,7 @@ npm link n8n-nodes-json-crud
     "max": 70000
   },
   {
-    "group": "業務部",
+    "group": "Sales",
     "count": 10,
     "sum": 450000,
     "avg": 45000,
@@ -360,196 +360,195 @@ npm link n8n-nodes-json-crud
 ]
 ```
 
-## 📚 詳細功能說明
+## 📚 Detailed Feature Descriptions
 
-### Read（讀取）模式說明
+### Read Modes
 
-#### 模式 1：Filter（篩選）
-- 根據條件篩選記錄
-- 支援多種運算子和邏輯組合
-- 適合批量過濾符合特定條件的資料
+#### Mode 1: Filter
+- Filter records based on conditions
+- Support multiple operators and logic combinations
+- Suitable for batch filtering data matching specific conditions
 
-#### 模式 2：Sort（排序）
-- 根據指定欄位排序
-- 支援升序和降序
-- 適合產生排名或有序列表
+#### Mode 2: Sort
+- Sort by specified field
+- Support ascending and descending order
+- Suitable for generating rankings or ordered lists
 
-#### 模式 3：Search（搜尋）
-- 全文搜尋或指定欄位搜尋
-- 支援大小寫敏感選項
-- 適合關鍵字查詢
+#### Mode 3: Search
+- Full-text or field-specific search
+- Support case-sensitive option
+- Suitable for keyword queries
 
-#### 模式 4：Limit（限制）
-- 分頁功能，支援 offset
-- 適合處理大量資料時的分批讀取
+#### Mode 4: Limit
+- Pagination with offset support
+- Suitable for batch reading when handling large datasets
 
-#### 模式 5：By Cell Position（儲存格讀取）
-- 類似 Excel 的精確定位讀取
-- 使用列索引（0-based）+ 可選欄位名稱
-- 支援靈活的範圍選擇
+#### Mode 5: By Cell Position
+- Excel-like precise positioning
+- Use row index (0-based) + optional field names
+- Support flexible range selection
 
-**列索引格式：**
-| 格式 | 說明 | 範例 |
-|------|------|------|
-| 單一列 | `0` | 只讀取第 1 列 |
-| 範圍 | `0-5` | 讀取第 1-6 列 |
-| 多個列 | `0,2,4` | 讀取第 1,3,5 列 |
-| 組合 | `0-2,5,7-9` | 讀取第 1-3,6,8-10 列 |
+**Row Index Formats:**
+| Format | Description | Example |
+|--------|-------------|---------|
+| Single row | `0` | Read row 1 only |
+| Range | `0-5` | Read rows 1-6 |
+| Multiple rows | `0,2,4` | Read rows 1,3,5 |
+| Combined | `0-2,5,7-9` | Read rows 1-3,6,8-10 |
 
-**欄位選擇：**
-- 留空：讀取所有欄位
-- 指定：只讀取指定欄位（逗號分隔），如 `姓名,薪資,部門`
+**Field Selection:**
+- Leave empty: Read all fields
+- Specify: Read only specified fields (comma-separated), e.g., `Name,Salary,Department`
 
-**使用情境：**
-- 提取 Excel 的表頭列
-- 讀取特定範圍的資料進行分析
-- 抽取不連續列的資料
-- 只提取需要的欄位減少資料量
+**Use Cases:**
+- Extract Excel header row
+- Read specific data range for analysis
+- Extract non-contiguous rows
+- Extract only needed fields to reduce data volume
 
-### Filter（篩選）支援的運算子
+### Filter Supported Operators
 
-| 運算子 | 說明 | 範例 |
-|--------|------|------|
-| Equals | 等於 | 部門 = "技術部" |
-| Not Equals | 不等於 | 狀態 ≠ "離職" |
-| Contains | 包含 | 姓名包含 "王" |
-| Not Contains | 不包含 | 職位不包含 "實習" |
-| Greater Than | 大於 | 薪資 > 40000 |
-| Greater or Equal | 大於等於 | 薪資 >= 45000 |
-| Less Than | 小於 | 年齡 < 30 |
-| Less or Equal | 小於等於 | 年齡 <= 35 |
-| Starts With | 開頭是 | 員工編號開頭是 "E" |
-| Ends With | 結尾是 | Email 結尾是 "@company.com" |
-| Is Empty | 為空 | 備註為空 |
-| Is Not Empty | 不為空 | 電話不為空 |
+| Operator | Description | Example |
+|----------|-------------|---------|
+| Equals | Equals | Department = "Tech" |
+| Not Equals | Not equals | Status ≠ "Resigned" |
+| Contains | Contains | Name contains "Wang" |
+| Not Contains | Not contains | Position not contains "Intern" |
+| Greater Than | Greater than | Salary > 40000 |
+| Greater or Equal | Greater or equal | Salary >= 45000 |
+| Less Than | Less than | Age < 30 |
+| Less or Equal | Less or equal | Age <= 35 |
+| Starts With | Starts with | EmployeeID starts with "E" |
+| Ends With | Ends with | Email ends with "@company.com" |
+| Is Empty | Is empty | Notes is empty |
+| Is Not Empty | Is not empty | Phone is not empty |
 
-### Update（更新）兩種模式
+### Update Two Modes
 
-#### 模式 1：By Condition（條件更新）
-- 根據條件篩選要更新的記錄
-- 可以同時更新多個欄位
-- 支援複雜條件組合
-- 適合批量更新符合特定條件的資料
+#### Mode 1: By Condition (Conditional Update)
+- Filter records to update based on conditions
+- Can update multiple fields simultaneously
+- Support complex condition combinations
+- Suitable for batch updating data matching specific conditions
 
-**使用情境：**
-- 將所有技術部員工加薪 10%
-- 更新所有在職員工的狀態
-- 標準化符合條件的資料格式
+**Use Cases:**
+- Increase salary by 10% for all Tech department employees
+- Update status for all active employees
+- Standardize data format for matching conditions
 
-#### 模式 2：By Cell Position（儲存格更新）
-- 類似 Excel 的 A1/B2 定位方式
-- 使用列索引（0-based）+ 欄位名稱
-- 支援靈活的範圍選擇
+#### Mode 2: By Cell Position
+- Excel-like A1/B2 positioning
+- Use row index (0-based) + field name
+- Support flexible range selection
 
-**列索引格式：**
-| 格式 | 說明 | 範例 |
-|------|------|------|
-| 單一列 | `0` | 只更新第 1 列 |
-| 範圍 | `0-5` | 更新第 1-6 列 |
-| 多個列 | `0,2,4` | 更新第 1,3,5 列 |
-| 組合 | `0-2,5,7-9` | 更新第 1-3,6,8-10 列 |
+**Row Index Formats:**
+| Format | Description | Example |
+|--------|-------------|---------|
+| Single row | `0` | Update row 1 only |
+| Range | `0-5` | Update rows 1-6 |
+| Multiple rows | `0,2,4` | Update rows 1,3,5 |
+| Combined | `0-2,5,7-9` | Update rows 1-3,6,8-10 |
 
-**注意：** 列索引是 0-based，即第一列是 0，第二列是 1，依此類推。
+**Note:** Row index is 0-based, i.e., row 1 is 0, row 2 is 1, and so on.
 
-**使用情境：**
-- 修正特定列的資料錯誤
-- 更新報表的表頭或總計列
-- 標記特定位置的資料
-- 批量更新連續或不連續的儲存格
+**Use Cases:**
+- Fix data errors in specific rows
+- Update header or total rows in reports
+- Mark data at specific positions
+- Batch update contiguous or non-contiguous cells
 
-### Delete（刪除）兩種模式
+### Delete Two Modes
 
-#### 模式 1：By Condition（條件刪除）
-- 根據條件篩選要刪除的記錄
-- 支援複雜條件組合（AND/OR）
-- 適合批量刪除符合特定條件的資料
+#### Mode 1: By Condition (Conditional Delete)
+- Filter records to delete based on conditions
+- Support complex condition combinations (AND/OR)
+- Suitable for batch deleting data matching specific conditions
 
-**使用情境：**
-- 移除所有離職員工的資料
-- 刪除過期或無效的記錄
-- 清除符合特定條件的測試資料
+**Use Cases:**
+- Remove all resigned employee records
+- Delete expired or invalid records
+- Clear test data matching specific conditions
 
-#### 模式 2：By Row Index（列索引刪除）
-- 類似 Excel 的精確列刪除
-- 使用列索引（0-based）指定要刪除的列
-- 支援靈活的範圍選擇
+#### Mode 2: By Row Index
+- Excel-like precise row deletion
+- Use row index (0-based) to specify rows to delete
+- Support flexible range selection
 
-**列索引格式：**
-| 格式 | 說明 | 範例 |
-|------|------|------|
-| 單一列 | `0` | 只刪除第 1 列 |
-| 範圍 | `0-5` | 刪除第 1-6 列 |
-| 多個列 | `0,2,4` | 刪除第 1,3,5 列 |
-| 組合 | `0-2,5,7-9` | 刪除第 1-3,6,8-10 列 |
+**Row Index Formats:**
+| Format | Description | Example |
+|--------|-------------|---------|
+| Single row | `0` | Delete row 1 only |
+| Range | `0-5` | Delete rows 1-6 |
+| Multiple rows | `0,2,4` | Delete rows 1,3,5 |
+| Combined | `0-2,5,7-9` | Delete rows 1-3,6,8-10 |
 
-**注意：** 列索引是 0-based，即第一列是 0，第二列是 1，依此類推。
+**Note:** Row index is 0-based, i.e., row 1 is 0, row 2 is 1, and so on.
 
-**使用情境：**
-- 移除 Excel 匯入的表頭列
-- 刪除特定位置的錯誤資料
-- 移除報表中的小計或備註列
-- 清除不連續的測試資料或異常記錄
+**Use Cases:**
+- Remove Excel imported header row
+- Delete error data at specific positions
+- Remove subtotal or note rows in reports
+- Clear non-contiguous test data or anomalous records
 
-### Update（更新）支援表達式
+### Update Supports Expressions
 
-在更新欄位值時，可以使用 n8n 表達式：
+When updating field values, you can use n8n expressions:
 
-**重要：** 表達式會針對**每一筆符合條件的資料**分別評估，確保每筆資料都用自己的值計算！
+**Important:** Expressions are evaluated **for each matching record** separately, ensuring each record uses its own values for calculation!
 
 ```javascript
-// 數字計算
-{{ $json.薪資 * 1.1 }}                    // 加薪 10%（每筆用自己的薪資）
-{{ $json.價格 - 100 }}                    // 減 100
-{{ $json.數量 + 5 }}                      // 加 5
+// Numeric calculations
+{{ $json.Salary * 1.1 }}                    // 10% raise (each record uses its own salary)
+{{ $json.Price - 100 }}                     // Subtract 100
+{{ $json.Quantity + 5 }}                    // Add 5
 
-// 字串操作
-{{ $json.姓名 + " (已更新)" }}             // 字串連接
-{{ $json.Email.toLowerCase() }}           // 轉小寫
-{{ $json.代碼.toUpperCase() }}            // 轉大寫
+// String operations
+{{ $json.Name + " (Updated)" }}             // String concatenation
+{{ $json.Email.toLowerCase() }}             // Convert to lowercase
+{{ $json.Code.toUpperCase() }}              // Convert to uppercase
 
-// 日期時間
-{{列索引刪除 | Code 節點 + 索引邏輯 | ✅ 視覺化設定 |
-|  $now }}                                 // 當前時間
-{{ $now.format('YYYY-MM-DD') }}           // 格式化日期
+// Date and time
+{{ $now }}                                  // Current time
+{{ $now.format('YYYY-MM-DD') }}             // Format date
 
-// 條件判斷
-{{ $json.薪資 > 50000 ? "高薪" : "一般" }} // 三元運算（每筆獨立判斷）
-{{ $json.年齡 >= 60 ? "退休" : "在職" }}   // 年齡判斷
+// Conditional expressions
+{{ $json.Salary > 50000 ? "High" : "Normal" }} // Ternary operator (each record evaluated independently)
+{{ $json.Age >= 60 ? "Retired" : "Active" }}   // Age check
 
-// 數學函數
-{{ Math.round($json.薪資 * 1.1) }}        // 四捨五入
-{{ Math.ceil($json.價格 * 0.9) }}         // 無條件進位
-{{ Math.floor($json.金額 / 100) * 100 }}  // 無條件捨去到百位
+// Math functions
+{{ Math.round($json.Salary * 1.1) }}        // Round
+{{ Math.ceil($json.Price * 0.9) }}          // Ceiling
+{{ Math.floor($json.Amount / 100) * 100 }}  // Floor to hundreds
 ```
 
-**範例：技術部加薪 15%**
+**Example: Tech department 15% raise**
 ```
 Update Mode: By Condition
-Condition: 部門 = "技術部"
-Field: 薪資
-Value: {{ $json.薪資 * 1.15 }}
+Condition: Department = "Tech"
+Field: Salary
+Value: {{ $json.Salary * 1.15 }}
 
-結果：
-- 員工 A (技術部, 50000) → 57500
-- 員工 B (技術部, 60000) → 69000  ✅ 每筆用自己的薪資計算
-- 員工 C (業務部, 45000) → 45000  (不變)
+Result:
+- Employee A (Tech, 50000) → 57500
+- Employee B (Tech, 60000) → 69000  ✅ Each record uses its own salary for calculation
+- Employee C (Sales, 45000) → 45000  (unchanged)
 ```
 
-## 🔧 與其他節點的比較
+## 🔧 Comparison with Other Nodes
 
-| 功能 | 傳統方式 | JSON CRUD 節點 |
-|------|---------|---------------|
-| 篩選資料 | Filter 節點 | ✅ 單一節點完成 |
-| 更新資料 | Edit Fields + IF | ✅ 單一節點完成 |
-| 儲存格更新 | Code 節點 + 複雜邏輯 | ✅ 視覺化設定 |
-| 刪除資料 | Filter（反向） | ✅ 更直觀的刪除 |
-| 搜尋 | Code 節點 | ✅ 內建搜尋功能 |
-| 統計 | Aggregate | ✅ 更簡單的設定 |
-| 組合操作 | 需要 3-5 個節點 | ✅ 一個節點串接 |
+| Feature | Traditional Way | JSON CRUD Node |
+|---------|----------------|----------------|
+| Filter data | Filter node | ✅ Single node |
+| Update data | Edit Fields + IF | ✅ Single node |
+| Cell update | Code node + complex logic | ✅ Visual configuration |
+| Delete data | Filter (reverse) | ✅ More intuitive deletion |
+| Search | Code node | ✅ Built-in search |
+| Statistics | Aggregate | ✅ Simpler configuration |
+| Combined operations | Requires 3-5 nodes | ✅ One node chain |
 
-## 💡 最佳實踐
+## 💡 Best Practices
 
-### 1. 處理 Excel 的完整流程
+### 1. Complete Excel Processing Workflow
 ```
 Read Binary File 
 → Extract from File 
@@ -561,272 +560,272 @@ Read Binary File
 → Write Binary File
 ```
 
-### 2. 資料驗證流程
+### 2. Data Validation Workflow
 ```
 Extract from File
-→ JSON CRUD (Filter 移除無效資料)
-→ JSON CRUD (Update 標準化格式)
-→ JSON CRUD (Statistics 檢查資料品質)
+→ JSON CRUD (Filter to remove invalid data)
+→ JSON CRUD (Update to standardize format)
+→ JSON CRUD (Statistics to check data quality)
 → Convert to File
 ```
 
-### 4. ⭐ 儲存格精確處理流程（適合複雜 Excel 處理）
+### 3. Report Generation Workflow
 ```
 Extract from File
-→ JSON CRUD (Read by Cell - 提取表頭)
-→ JSON CRUD (Read by Cell - 提取資料範圍)
-→ JSON CRUD (Update by Cell - 修正特定錯誤)
-→ JSON CRUD (Filter - 篩選有效資料)
-→ JSON CRUD (Statistics - 統計分析)
+→ JSON CRUD (Filter time range)
+→ JSON CRUD (Statistics group analysis)
+→ JSON CRUD (Sort)
 → Convert to File
 ```
 
-### 5. 混合模式工作流程
+### 4. ⭐ Cell Correction Workflow
 ```
 Extract from File
-→ JSON CRUD (Read by Cell - 只讀取需要的列和欄位)
-→ JSON CRUD (Filter - 進一步條件篩選)
-→ JSON CRUD (Update by Condition - 批量更新)
-→ JSON CRUD (Update by Cell - 修正特殊情況)
-→ JSON CRUD (Sort - 排序)
+→ JSON CRUD (Update by Cell - Fix header row)
+→ JSON CRUD (Update by Cell - Update specific error data)
+→ JSON CRUD (Filter valid data)
 → Convert to File
 ```
 
-### 3. 報表生成流程
+### 5. ⭐ Cell Precise Processing Workflow (For complex Excel processing)
 ```
 Extract from File
-→ JSON CRUD (Filter 選擇時間範圍)
-→ JSON CRUD (Statistics 分組統計)
-→ JSON CRUD (Sort 排序)
+→ JSON CRUD (Read by Cell - Extract header)
+→ JSON CRUD (Read by Cell - Extract data range)
+→ JSON CRUD (Update by Cell - Fix specific errors)
+→ JSON CRUD (Filter - Filter valid data)
+→ JSON CRUD (Statistics - Statistical analysis)
 → Convert to File
 ```
 
-### 4. ⭐ 儲存格修正流程
+### 6. Mixed Mode Workflow
 ```
 Extract from File
-→ JSON CRUD (Update by Cell - 修正表頭列)
-→ JSON CRUD (Update by Cell - 更新特定錯誤資料)
-→ JSON CRUD (Filter 篩選有效資料)
+→ JSON CRUD (Read by Cell - Read only needed rows and columns)
+→ JSON CRUD (Filter - Further conditional filtering)
+→ JSON CRUD (Update by Condition - Batch update)
+→ JSON CRUD (Update by Cell - Fix special cases)
+→ JSON CRUD (Sort - Sort)
 → Convert to File
 ```
 
-## 🎯 實戰案例
+## 🎯 Real-World Cases
 
-### 案例 1：提取並分析 Excel 特定範圍資料
-**情境：**從一個大型 Excel 檔案中，只需要提取第 10-50 列的姓名、部門、薪資三個欄位進行分析
+### Case 1: Extract and Analyze Specific Excel Range
+**Scenario:** From a large Excel file, only need to extract rows 10-50 with Name, Department, and Salary fields for analysis
 
-**解決方案：**
+**Solution:**
 ```
-步驟 1: Extract from File
-- 將 Excel 轉換為 JSON
+Step 1: Extract from File
+- Convert Excel to JSON
 
-步驟 2: JSON CRUD (Read by Cell)
-- Row Index: 9-49  (第 10-50 列，0-based)
-- Field Names: 姓名,部門,薪資
+Step 2: JSON CRUD (Read by Cell)
+- Row Index: 9-49  (rows 10-50, 0-based)
+- Field Names: Name,Department,Salary
 
-步驟 3: JSON CRUD (Statistics)
-- 對提取的資料進行統計分析
+Step 3: JSON CRUD (Statistics)
+- Perform statistical analysis on extracted data
 ```
 
-**優點：**
-- 大幅減少記憶體使用
-- 提升處理速度
-- 只
+**Benefits:**
+- Significantly reduce memory usage
+- Improve processing speed
+- Process only needed data
 
-### 案例 3-1：清理 Excel 匯入的多餘資料
-**情境：**匯入的 Excel 檔案中，第 1 列是表頭需要刪除，最後 3 列（第 98-100 列）是備註也需要刪除
+### Case 2: Excel Report Data Reorganization
+**Scenario:** In Excel report, row 1 is header, rows 2-10 are current month data, rows 50-60 are last year's same period data, need to extract separately for comparison
 
-**解決方案：**
+**Solution:**
 ```
-步驟 1: JSON CRUD (Delete by Row Index)
-- Row Index: 0  (刪除表頭)
+Step 1: JSON CRUD (Read by Cell) - Extract current month data
+- Row Index: 1-9  (rows 2-10)
+- Field Names: Leave empty (read all fields)
+- Output to next step
 
-步驟 2: JSON CRUD (Delete by Row Index)  
-- Row Index: 97-99  (刪除最後 3 列，注意刪除第一列後索引已改變)
+Step 2: JSON CRUD (Read by Cell) - Extract last year data
+- Row Index: 49-59  (rows 50-60)
+- Field Names: Leave empty
+- Output to next step
 
-或者一次性刪除：
+Step 3: Compare and analyze two datasets
+```
+
+### Case 3: Fix Excel Import Error Data
+**Scenario:** In imported Excel file, row 1 (header) Department field is wrong, and rows 5-8 salaries need uniform update
+
+**Solution:**
+```
+Step 1: JSON CRUD (Update by Cell)
+- Row Index: 0
+- Field Name: Department
+- New Value: Department
+
+Step 2: JSON CRUD (Update by Cell)
+- Row Index: 4-7  (rows 5-8, 0-based)
+- Field Name: Salary
+- New Value: {{ $json.Salary * 1.05 }}
+```
+
+### Case 3-1: Clean Excel Import Redundant Data
+**Scenario:** In imported Excel file, row 1 is header to be deleted, last 3 rows (rows 98-100) are notes also to be deleted
+
+**Solution:**
+```
+Step 1: JSON CRUD (Delete by Row Index)
+- Row Index: 0  (delete header)
+
+Step 2: JSON CRUD (Delete by Row Index)  
+- Row Index: 97-99  (delete last 3 rows, note index changed after deleting first row)
+
+Or delete at once:
 JSON CRUD (Delete by Row Index)
 - Row Index: 0,97-99
 ```
 
-### 案例 3-2：移除測試和異常資料
-**情境：**資料中第 5、10、15 列是測試資料，第 50-55 列是匯入異常的資料，需要全部移除
+### Case 3-2: Remove Test and Anomalous Data
+**Scenario:** In data, rows 5, 10, 15 are test data, rows 50-55 are import anomalous data, all need to be removed
 
-**解決方案：**
+**Solution:**
 ```
 JSON CRUD (Delete by Row Index)
-- Row Index: 4,9,14,49-54  (注意 0-based 索引)
+- Row Index: 4,9,14,49-54  (note 0-based index)
 
-結果：一次性精確刪除所有指定的列
-```處理需要的資料
-
-### 案例 2：Excel 報表資料重組
-**情境：**Excel 報表中，第 1 列是表頭，第 2-10 列是本月資料，第 50-60 列是去年同期資料，需要分別提取進行比較
-
-**解決方案：**
-```
-步驟 1: JSON CRUD (Read by Cell) - 提取本月資料
-- Row Index: 1-9  (第 2-10 列)
-- Field Names: 留空（讀取所有欄位）
-- 輸出至下一步
-
-步驟 2: JSON CRUD (Read by Cell) - 提取去年資料
-- Row Index: 49-59  (第 50-60 列)
-- Field Names: 留空
-- 輸出至下一步
-
-步驟 3: 比較分析兩組資料
+Result: Precisely delete all specified rows at once
 ```
 
-### 案例 3：修正 Excel 匯入的錯誤資料
-**情境：**匯入的 Excel 檔案中，第 1 列（表頭）的部門欄位錯誤，且第 5-8 列的薪資需要統一更新
+### Case 4: Batch Process Customer Data
+**Scenario:** Need to mark specific customers' status as "VIP" and update their discount rate
 
-**解決方案：**
+**Solution:**
 ```
-步驟 1: JSON CRUD (Update by Cell)
-- Row Index: 0
-- Field Name: 部門
-- New Value: Department
+Step 1: JSON CRUD (Filter)
+- Filter target customers
 
-步驟 2: JSON CRUD (Update by Cell)
-- Row Index: 4-7  (第 5-8 列，0-based)
-- Field Name: 薪資
-- New Value: {{ $json.薪資 * 1.05 }}
+Step 2: JSON CRUD (Update by Condition)
+- Condition: CustomerLevel = "Platinum"
+- Update: Status = "VIP", DiscountRate = 0.15
 ```
 
-### 案例 4：批量處理客戶資料
-**情境：**需要將特定客戶的狀態標記為「VIP」，並更新他們的折扣率
+## ⚠️ Notes
 
-**解決方案：**
+1. **Data Backup**
+   - Always backup original files before processing important data
+
+2. **Condition Logic**
+   - Multiple conditions in Filter default to AND logic
+   - Can switch to OR logic
+
+3. **Row Index Rules**
+   - Row index starts from 0 (0 = row 1)
+   - Range is inclusive (0-5 means rows 1-6)
+   - Out-of-range indexes are automatically ignored
+
+4. **Performance Considerations**
+   - When processing large datasets (> 10,000 records), consider batch processing
+   - Use Filter first to reduce data volume
+   - Cell Update is suitable for precise modifications, not large-scale batch updates
+
+5. **Data Types**
+   - Numeric comparisons automatically convert types
+   - String comparisons are case-sensitive (unless using Search's Case Sensitive option)
+
+## 🐛 Troubleshooting
+
+### Issue: Node doesn't appear in n8n
+**Solution:**
+```bash
+# Confirm environment variables
+export N8N_COMMUNITY_PACKAGES_ENABLED=true
+
+# Restart n8n
+n8n stop
+n8n start
 ```
-步驟 1: JSON CRUD (Filter)
-- 篩選出目標客戶
 
-步驟 2: JSON CRUD (Update by Condition)
-- 條件：客戶等級 = "白金"
-- 更新：狀態 = "VIP"，折扣率 = 0.15
-```
+### Issue: Filter returns no results
+**Solution:**
+- Check if field names are correct (case-sensitive)
+- Check comparison value format
+- Use Search functionality to test data
 
-## ⚠️ 注意事項
+### Issue: Update doesn't take effect
+**Solution:**
+- Verify Update Conditions are correct
+- Check expression syntax
+- Test with no conditions to see if all updates work
 
-1. **資料備份**
-   - 處理重要資料前，請先備份原始檔案
+### Issue: Cell Update updates wrong rows
+**Solution:**
+- Confirm row index is 0-based (row 1 = 0)
+- Check index format is correct (single: 0, range: 0-5, multiple: 0,2,4)
+- Use Table view to check actual row numbers in data
 
-2. **條件邏輯**
-   - Filter 的多個條件預設是 AND 邏輯
-   - 可以切換為 OR 邏輯
+### Issue: Range update exceeds expectations
+**Solution:**
+- Check total row count in input data
+- Range is automatically limited to valid range
+- Use Limit operation to confirm record count first
 
-3. **列索引規則**
-   - 列索引從 0 開始（0 = 第 1 列）
-   - 範圍是包含首尾的（0-5 表示第 1-6 列）
-   - 超出範圍的索引會被自動忽略
+### Issue: Cell Read returns incomplete fields
+**Solution:**
+- Check Field Names spelling is correct (case-sensitive)
+- Confirm field names match actual data field names
+- Leave Field Names empty to read all fields for inspection
 
-4. **效能考量**
+### Issue: Cell Read returns empty results
+**Solution:**
+- Confirm row index range is within data range
+- Check actual row count in data (can use Limit mode to view)
+- Verify row index format is correct (0-based)
 
-### 問題：Delete by Row Index 刪除後索引會變化嗎？
-**解決方案：**
-- 是的，刪除操作會立即改變後續列的索引
-- 建議一次性指定所有要刪除的列（使用組合格式）
-- 如果需要分步驟刪除，從後往前刪除（先刪除索引大的列）
+### Issue: How to read multiple non-contiguous ranges simultaneously?
+**Solution:**
+- Use combined format: `0-5,10-15,20-25`
+- Or use multiple JSON CRUD nodes to read separately, then merge results
 
-### 問題：如何刪除 Excel 的表頭列？
-**解決方案：**
+### Issue: Delete by Row Index - do indexes change after deletion?
+**Solution:**
+- Yes, delete operation immediately changes subsequent row indexes
+- Recommend specifying all rows to delete at once (using combined format)
+- If deleting in steps, delete from bottom to top (delete larger indexes first)
+
+### Issue: How to delete Excel header row?
+**Solution:**
 ```
 JSON CRUD (Delete by Row Index)
 - Delete Mode: By Row Index
 - Row Index: 0
 
-這會刪除第 1 列（通常是表頭）
+This deletes row 1 (usually the header)
 ```
 
-### 問題：Delete by Row Index 和 Delete by Condition 該如何選擇？
-**解決方案：**
-- **使用 Row Index**：當您知道確切要刪除的列位置時
-  - 例如：刪除表頭、刪除特定位置的錯誤資料
-- **使用 Condition**：當您需要根據資料內容判斷時
-  - 例如：刪除所有離職員工、刪除過期記錄
-   - 處理大量資料（> 10,000 筆）時，建議分批處理
-   - 優先使用 Filter 減少資料量
-   - Cell Update 適合精確修改，不適合大範圍批量更新
+### Issue: How to choose between Delete by Row Index and Delete by Condition?
+**Solution:**
+- **Use Row Index**: When you know exact row positions to delete
+  - E.g., delete header, delete error data at specific positions
+- **Use Condition**: When you need to determine based on data content
+  - E.g., delete all resigned employees, delete expired records
 
-5. **資料型別**
-   - 數字比較會自動轉換型別
-   - 字串比較區分大小寫（除非使用 Search 的 Case Sensitive 選項）
+## 🤝 Contributing
 
-## 🐛 疑難排解
+Issues and Pull Requests are welcome!
 
-### 問題：節點沒有出現在 n8n 中
-**解決方案：**
-```bash
-# 確認環境變數
-export N8N_COMMUNITY_PACKAGES_ENABLED=true
-
-# 重啟 n8n
-n8n stop
-n8n start
-```
-
-### 問題：篩選沒有結果
-**解決方案：**
-- 檢查欄位名稱是否正確（區分大小寫）
-- 檢查比較值的格式
-- 使用 Search 功能測試資料
-
-### 問題：更新沒有生效
-**解決方案：**
-- 確認 Update Conditions 是否正確
-- 檢查表達式語法
-- 先不加條件測試是否全部更新
-
-### 問題：Cell Update 更新了錯誤的列
-**解決方案：**
-- 確認列索引是 0-based（第 1 列 = 0）
-- 檢查索引格式是否正確（單一：0，範圍：0-5，多個：0,2,4）
-- 使用 Table 視圖檢查資料的實際行號
-
-### 問題：範圍更新超出預期
-**解決方案：**
-- 檢查輸入資料的總行數
-- 範圍會自動限制在有效範圍內
-- 使用 Limit 操作先確認資料筆數
-
-### 問題：Cell Read 讀取的欄位不完整
-**解決方案：**
-- 檢查 Field Names 的拼寫是否正確（區分大小寫）
-- 確認欄位名稱與實際資料的欄位名稱一致
-- 留空 Field Names 可以讀取所有欄位進行檢查
-
-### 問題：Cell Read 返回空結果
-**解決方案：**
-- 確認列索引範圍是否在資料範圍內
-- 檢查資料的實際行數（可使用 Limit 模式查看）
-- 驗證列索引格式是否正確（0-based）
-
-### 問題：如何同時讀取多個不連續的範圍？
-**解決方案：**
-- 使用組合格式：`0-5,10-15,20-25`
-- 或分多次 JSON CRUD 節點讀取，然後合併結果
-
-## 🤝 貢獻
-
-歡迎提交 Issue 和 Pull Request！
-
-## 📄 授權
+## 📄 License
 
 MIT License
 
-## 🔗 相關資源
+## 🔗 Related Resources
 
-- [n8n 官方文檔](https://docs.n8n.io)
-- [n8n 社群節點開發指南](https://docs.n8n.io/integrations/creating-nodes/)
-- [n8n 論壇](https://community.n8n.io)
+- [n8n Official Documentation](https://docs.n8n.io)
+- [n8n Community Node Development Guide](https://docs.n8n.io/integrations/creating-nodes/)
+- [n8n Forum](https://community.n8n.io)
 
-## 📧 聯絡方式
+## 📧 Contact
 
-如有問題或建議，請：
-- 開 Issue: https://github.com/code4Copilot/n8n-nodes-json-crud/issues
+For questions or suggestions:
+- Open an Issue: https://github.com/code4Copilot/n8n-nodes-json-crud/issues
 - Email: hueyan.chen@gmail.com
 
 ---
 
-**讓 Excel 資料處理變得簡單！** 🚀
+**Make Excel data processing simple!** 🚀
