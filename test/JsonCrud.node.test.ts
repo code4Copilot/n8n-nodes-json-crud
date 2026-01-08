@@ -166,6 +166,265 @@ describe('JsonCrud Node', () => {
 
       expect(result[0]).toHaveLength(2);
     });
+
+    describe('Case Sensitivity', () => {
+      test('should filter with equals operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'ACTIVE' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('John');
+      });
+
+      test('should filter with equals operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'ACTIVE' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(3);
+      });
+
+      test('should filter with notEquals operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'Inactive' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'status', operator: 'notEquals', value: 'Active' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(2);
+        expect(result[0][0].json.name).toBe('Jane');
+        expect(result[0][1].json.name).toBe('Bob');
+      });
+
+      test('should filter with notEquals operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'Inactive' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'status', operator: 'notEquals', value: 'Active' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('Bob');
+      });
+
+      test('should filter with contains operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John Smith' } },
+          { json: { name: 'john doe' } },
+          { json: { name: 'JOHN BROWN' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'name', operator: 'contains', value: 'John' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('John Smith');
+      });
+
+      test('should filter with contains operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John Smith' } },
+          { json: { name: 'john doe' } },
+          { json: { name: 'JOHN BROWN' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'name', operator: 'contains', value: 'John' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(3);
+      });
+
+      test('should filter with startsWith operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { email: 'Admin@example.com' } },
+          { json: { email: 'admin@test.com' } },
+          { json: { email: 'user@example.com' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'email', operator: 'startsWith', value: 'Admin' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.email).toBe('Admin@example.com');
+      });
+
+      test('should filter with startsWith operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { email: 'Admin@example.com' } },
+          { json: { email: 'admin@test.com' } },
+          { json: { email: 'user@example.com' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'email', operator: 'startsWith', value: 'Admin' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(2);
+      });
+
+      test('should filter with endsWith operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { filename: 'document.PDF' } },
+          { json: { filename: 'image.pdf' } },
+          { json: { filename: 'text.txt' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'filename', operator: 'endsWith', value: '.PDF' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.filename).toBe('document.PDF');
+      });
+
+      test('should filter with endsWith operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { filename: 'document.PDF' } },
+          { json: { filename: 'image.pdf' } },
+          { json: { filename: 'text.txt' } },
+        ];
+
+        const parameters = {
+          operation: 'read',
+          readMode: 'filter',
+          filterConditions: {
+            conditions: [
+              { field: 'filename', operator: 'endsWith', value: '.PDF' },
+            ],
+          },
+          conditionLogic: 'and',
+          filterCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(2);
+      });
+    });
   });
 
   describe('READ Operation - Cell Position', () => {
@@ -377,6 +636,128 @@ describe('JsonCrud Node', () => {
       expect(result[0][1].json.salary).toBe(45000);
       expect(result[0][2].json.salary).toBe('60000');
     });
+
+    describe('Case Sensitivity', () => {
+      test('should update with equals operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active', bonus: 0 } },
+          { json: { name: 'Jane', status: 'active', bonus: 0 } },
+          { json: { name: 'Bob', status: 'Inactive', bonus: 0 } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: true,
+          fieldsToUpdate: {
+            fields: [{ name: 'bonus', value: '1000' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0][0].json.bonus).toBe('1000');
+        expect(result[0][1].json.bonus).toBe(0);
+        expect(result[0][2].json.bonus).toBe(0);
+      });
+
+      test('should update with equals operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active', bonus: 0 } },
+          { json: { name: 'Jane', status: 'active', bonus: 0 } },
+          { json: { name: 'Bob', status: 'Inactive', bonus: 0 } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: false,
+          fieldsToUpdate: {
+            fields: [{ name: 'bonus', value: '1000' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0][0].json.bonus).toBe('1000');
+        expect(result[0][1].json.bonus).toBe('1000');
+        expect(result[0][2].json.bonus).toBe(0);
+      });
+
+      test('should update with contains operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { email: 'Admin@example.com', role: 'user' } },
+          { json: { email: 'admin@test.com', role: 'user' } },
+          { json: { email: 'user@test.com', role: 'user' } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'email', operator: 'contains', value: 'Admin' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: true,
+          fieldsToUpdate: {
+            fields: [{ name: 'role', value: 'admin' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0][0].json.role).toBe('admin');
+        expect(result[0][1].json.role).toBe('user');
+        expect(result[0][2].json.role).toBe('user');
+      });
+
+      test('should update with contains operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { email: 'Admin@example.com', role: 'user' } },
+          { json: { email: 'admin@test.com', role: 'user' } },
+          { json: { email: 'user@test.com', role: 'user' } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'email', operator: 'contains', value: 'Admin' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: false,
+          fieldsToUpdate: {
+            fields: [{ name: 'role', value: 'admin' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0][0].json.role).toBe('admin');
+        expect(result[0][1].json.role).toBe('admin');
+        expect(result[0][2].json.role).toBe('user');
+      });
+    });
   });
 
   describe('DELETE Operation - By Condition', () => {
@@ -429,6 +810,168 @@ describe('JsonCrud Node', () => {
       expect(result[0]).toHaveLength(2);
       expect(result[0][0].json.name).toBe('張三');
       expect(result[0][1].json.name).toBe('王五');
+    });
+
+    describe('Case Sensitivity', () => {
+      test('should delete with equals operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'Inactive' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(2);
+        expect(result[0][0].json.name).toBe('Jane');
+        expect(result[0][1].json.name).toBe('Bob');
+      });
+
+      test('should delete with equals operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', status: 'Active' } },
+          { json: { name: 'Jane', status: 'active' } },
+          { json: { name: 'Bob', status: 'Inactive' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'status', operator: 'equals', value: 'Active' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('Bob');
+      });
+
+      test('should delete with notEquals operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', type: 'Admin' } },
+          { json: { name: 'Jane', type: 'admin' } },
+          { json: { name: 'Bob', type: 'User' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'type', operator: 'notEquals', value: 'Admin' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('John');
+      });
+
+      test('should delete with notEquals operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John', type: 'Admin' } },
+          { json: { name: 'Jane', type: 'admin' } },
+          { json: { name: 'Bob', type: 'User' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'type', operator: 'notEquals', value: 'Admin' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        // notEquals 'Admin' with case insensitive will match 'Admin' and 'admin' (keep them), delete 'User'
+        expect(result[0]).toHaveLength(2);
+        expect(result[0][0].json.name).toBe('John');
+        expect(result[0][1].json.name).toBe('Jane');
+      });
+
+      test('should delete with contains operator (case sensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John Smith' } },
+          { json: { name: 'john doe' } },
+          { json: { name: 'Jane Smith' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'name', operator: 'contains', value: 'John' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: true,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(2);
+        expect(result[0][0].json.name).toBe('john doe');
+        expect(result[0][1].json.name).toBe('Jane Smith');
+      });
+
+      test('should delete with contains operator (case insensitive)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: 'John Smith' } },
+          { json: { name: 'john doe' } },
+          { json: { name: 'Jane Smith' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'name', operator: 'contains', value: 'John' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0]).toHaveLength(1);
+        expect(result[0][0].json.name).toBe('Jane Smith');
+      });
     });
   });
 

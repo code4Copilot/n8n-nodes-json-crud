@@ -139,6 +139,14 @@ export class JsonCrud implements INodeType {
 				default: 'and',
 			},
 			{
+				displayName: 'Case Sensitive',
+				name: 'filterCaseSensitive',
+				type: 'boolean',
+				displayOptions: { show: { operation: ['read'], readMode: ['filter'] } },
+				default: false,
+				description: 'Whether string comparisons should be case sensitive',
+			},
+			{
 				displayName: 'Sort Field',
 				name: 'sortField',
 				type: 'string',
@@ -285,6 +293,14 @@ export class JsonCrud implements INodeType {
 				description: 'How to combine multiple conditions',
 			},
 			{
+				displayName: 'Case Sensitive',
+				name: 'updateCaseSensitive',
+				type: 'boolean',
+				displayOptions: { show: { operation: ['update'], updateMode: ['condition'] } },
+				default: false,
+				description: 'Whether string comparisons should be case sensitive',
+			},
+			{
 				displayName: 'Fields to Update',
 				name: 'fieldsToUpdate',
 				type: 'fixedCollection',
@@ -372,6 +388,14 @@ export class JsonCrud implements INodeType {
 				],
 				default: 'and',
 				description: 'How to combine multiple conditions',
+			},
+			{
+				displayName: 'Case Sensitive',
+				name: 'deleteCaseSensitive',
+				type: 'boolean',
+				displayOptions: { show: { operation: ['delete'], deleteMode: ['condition'] } },
+				default: false,
+				description: 'Whether string comparisons should be case sensitive',
 			},
 			{
 				displayName: 'Unique Fields',
@@ -495,6 +519,8 @@ export class JsonCrud implements INodeType {
 	private handleFilter(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
 		const filterConditions = this.getNodeParameter('filterConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('conditionLogic', 0) as string;
+		const caseSensitive = this.getNodeParameter('filterCaseSensitive', 0) as boolean;
+		
 		if (!filterConditions.conditions?.length) return items;
 
 		return items.filter((item) => {
@@ -503,14 +529,34 @@ export class JsonCrud implements INodeType {
 				const compareVal = c.value;
 				
 				switch (c.operator) {
-					case 'equals': 
-						return String(val) === String(compareVal);
-					case 'notEquals': 
-						return String(val) !== String(compareVal);
-					case 'contains': 
-						return String(val).includes(String(compareVal));
-					case 'notContains': 
-						return !String(val).includes(String(compareVal));
+					case 'equals': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive
+							? valStr === compareStr
+							: valStr.toLowerCase() === compareStr.toLowerCase();
+					}
+					case 'notEquals': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive
+							? valStr !== compareStr
+							: valStr.toLowerCase() !== compareStr.toLowerCase();
+					}
+					case 'contains': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.includes(compareStr)
+							: valStr.toLowerCase().includes(compareStr.toLowerCase());
+					}
+					case 'notContains': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? !valStr.includes(compareStr)
+							: !valStr.toLowerCase().includes(compareStr.toLowerCase());
+					}
 					case 'greaterThan': 
 						return Number(val) > Number(compareVal);
 					case 'greaterOrEqual': 
@@ -519,10 +565,20 @@ export class JsonCrud implements INodeType {
 						return Number(val) < Number(compareVal);
 					case 'lessOrEqual': 
 						return Number(val) <= Number(compareVal);
-					case 'startsWith': 
-						return String(val).startsWith(String(compareVal));
-					case 'endsWith': 
-						return String(val).endsWith(String(compareVal));
+					case 'startsWith': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.startsWith(compareStr)
+							: valStr.toLowerCase().startsWith(compareStr.toLowerCase());
+					}
+					case 'endsWith': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.endsWith(compareStr)
+							: valStr.toLowerCase().endsWith(compareStr.toLowerCase());
+					}
 					case 'isEmpty': 
 						return !val || val === '' || val === null || val === undefined;
 					case 'isNotEmpty': 
@@ -547,10 +603,22 @@ export class JsonCrud implements INodeType {
 
 	private handleSearch(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
 		const field = this.getNodeParameter('searchField', 0) as string;
-		const value = String(this.getNodeParameter('searchValue', 0)).toLowerCase();
+		const searchValue = String(this.getNodeParameter('searchValue', 0));
+		const caseSensitive = this.getNodeParameter('caseSensitive', 0) as boolean;
+		
+		const value = caseSensitive ? searchValue : searchValue.toLowerCase();
+		
 		return items.filter(item => {
-			if (field) return String(item.json[field]).toLowerCase().includes(value);
-			return Object.values(item.json).some(v => String(v).toLowerCase().includes(value));
+			if (field) {
+				const fieldValue = String(item.json[field]);
+				const compareValue = caseSensitive ? fieldValue : fieldValue.toLowerCase();
+				return compareValue.includes(value);
+			}
+			return Object.values(item.json).some(v => {
+				const itemValue = String(v);
+				const compareValue = caseSensitive ? itemValue : itemValue.toLowerCase();
+				return compareValue.includes(value);
+			});
 		});
 	}
 
@@ -609,6 +677,7 @@ export class JsonCrud implements INodeType {
 	private handleConditionUpdate(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
 		const conditions = this.getNodeParameter('updateConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('updateConditionLogic', 0) as string;
+		const caseSensitive = this.getNodeParameter('updateCaseSensitive', 0) as boolean;
 		
 		return items.map((item, itemIndex) => {
 			let match = true;
@@ -620,14 +689,34 @@ export class JsonCrud implements INodeType {
 					const compareVal = c.value;
 					
 					switch (c.operator) {
-						case 'equals': 
-							return String(val) === String(compareVal);
-						case 'notEquals': 
-							return String(val) !== String(compareVal);
-						case 'contains': 
-							return String(val).includes(String(compareVal));
-						case 'notContains': 
-							return !String(val).includes(String(compareVal));
+						case 'equals': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive
+								? valStr === compareStr
+								: valStr.toLowerCase() === compareStr.toLowerCase();
+						}
+						case 'notEquals': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive
+								? valStr !== compareStr
+								: valStr.toLowerCase() !== compareStr.toLowerCase();
+						}
+						case 'contains': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive 
+								? valStr.includes(compareStr)
+								: valStr.toLowerCase().includes(compareStr.toLowerCase());
+						}
+						case 'notContains': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive 
+								? !valStr.includes(compareStr)
+								: !valStr.toLowerCase().includes(compareStr.toLowerCase());
+						}
 						case 'greaterThan': 
 							return Number(val) > Number(compareVal);
 						case 'greaterOrEqual': 
@@ -636,10 +725,20 @@ export class JsonCrud implements INodeType {
 							return Number(val) < Number(compareVal);
 						case 'lessOrEqual': 
 							return Number(val) <= Number(compareVal);
-						case 'startsWith': 
-							return String(val).startsWith(String(compareVal));
-						case 'endsWith': 
-							return String(val).endsWith(String(compareVal));
+						case 'startsWith': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive 
+								? valStr.startsWith(compareStr)
+								: valStr.toLowerCase().startsWith(compareStr.toLowerCase());
+						}
+						case 'endsWith': {
+							const valStr = String(val);
+							const compareStr = String(compareVal);
+							return caseSensitive 
+								? valStr.endsWith(compareStr)
+								: valStr.toLowerCase().endsWith(compareStr.toLowerCase());
+						}
 						case 'isEmpty': 
 							return !val || val === '' || val === null || val === undefined;
 						case 'isNotEmpty': 
@@ -743,6 +842,7 @@ export class JsonCrud implements INodeType {
 	private handleConditionDelete(this: IExecuteFunctions, items: INodeExecutionData[]): INodeExecutionData[] {
 		const conditions = this.getNodeParameter('deleteConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('deleteConditionLogic', 0) as string;
+		const caseSensitive = this.getNodeParameter('deleteCaseSensitive', 0) as boolean;
 		
 		if (!conditions.conditions?.length) return items;
 		
@@ -752,14 +852,34 @@ export class JsonCrud implements INodeType {
 				const compareVal = c.value;
 				
 				switch (c.operator) {
-					case 'equals': 
-						return String(val) === String(compareVal);
-					case 'notEquals': 
-						return String(val) !== String(compareVal);
-					case 'contains': 
-						return String(val).includes(String(compareVal));
-					case 'notContains': 
-						return !String(val).includes(String(compareVal));
+					case 'equals': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive
+							? valStr === compareStr
+							: valStr.toLowerCase() === compareStr.toLowerCase();
+					}
+					case 'notEquals': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive
+							? valStr !== compareStr
+							: valStr.toLowerCase() !== compareStr.toLowerCase();
+					}
+					case 'contains': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.includes(compareStr)
+							: valStr.toLowerCase().includes(compareStr.toLowerCase());
+					}
+					case 'notContains': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? !valStr.includes(compareStr)
+							: !valStr.toLowerCase().includes(compareStr.toLowerCase());
+					}
 					case 'greaterThan': 
 						return Number(val) > Number(compareVal);
 					case 'greaterOrEqual': 
@@ -768,10 +888,20 @@ export class JsonCrud implements INodeType {
 						return Number(val) < Number(compareVal);
 					case 'lessOrEqual': 
 						return Number(val) <= Number(compareVal);
-					case 'startsWith': 
-						return String(val).startsWith(String(compareVal));
-					case 'endsWith': 
-						return String(val).endsWith(String(compareVal));
+					case 'startsWith': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.startsWith(compareStr)
+							: valStr.toLowerCase().startsWith(compareStr.toLowerCase());
+					}
+					case 'endsWith': {
+						const valStr = String(val);
+						const compareStr = String(compareVal);
+						return caseSensitive 
+							? valStr.endsWith(compareStr)
+							: valStr.toLowerCase().endsWith(compareStr.toLowerCase());
+					}
 					case 'isEmpty': 
 						return !val || val === '' || val === null || val === undefined;
 					case 'isNotEmpty': 
