@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-01-09
+
+### Added
+- **Condition Field Validation**: 新增條件欄位存在性驗證
+  - Update 操作在執行條件更新前，會驗證所有條件欄位是否存在
+  - Delete 操作在執行條件刪除前，會驗證所有條件欄位是否存在
+  - 當條件欄位不存在時，會拋出清晰的錯誤訊息，指出具體哪個欄位不存在
+  - 更新欄位仍可不存在，因為可能是新增計算欄位（此行為保持不變）
+
+### Fixed
+- **Error Handling Improvement**: 改善錯誤處理機制
+  - 修正條件欄位不存在時可能產生的非預期行為
+  - 避免因欄位名稱拼寫錯誤導致的靜默失敗
+  - 提供更明確的錯誤訊息，幫助使用者快速定位問題
+
+### Tests
+- 新增 5 個單元測試案例，涵蓋條件欄位驗證功能：
+  - Update 操作：單一條件欄位不存在時的錯誤處理
+  - Update 操作：多個條件欄位中有一個不存在時的錯誤處理
+  - Update 操作：驗證更新欄位可不存在（新增計算欄位）
+  - Delete 操作：單一條件欄位不存在時的錯誤處理
+  - Delete 操作：多個條件欄位中有一個不存在時的錯誤處理
+
+## [1.1.1] - 2026-01-XX
+
+### Fixed
+- **Case Sensitive Bug Fix**: 修正 Case Sensitive（大小寫敏感）選項相關錯誤
+  - 確保所有字串比較操作都能正確處理大小寫敏感設定
+  - 影響 Read、Update、Delete 操作的條件比對
+
 ## [1.1.0] - 2026-01-06
 
 ### Added
@@ -41,5 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 支援表達式計算
 - 分組統計功能
 
+[1.1.2]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/code4Copilot/n8n-nodes-json-crud/releases/tag/v1.0.2

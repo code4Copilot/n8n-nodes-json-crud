@@ -679,6 +679,19 @@ export class JsonCrud implements INodeType {
 		const conditionLogic = this.getNodeParameter('updateConditionLogic', 0) as string;
 		const caseSensitive = this.getNodeParameter('updateCaseSensitive', 0) as boolean;
 		
+		// Validate that all condition fields exist in at least one item
+		if (conditions.conditions?.length) {
+			for (const condition of conditions.conditions) {
+				const fieldExists = items.some(item => condition.field in item.json);
+				if (!fieldExists) {
+					throw new NodeOperationError(
+						this.getNode(),
+						`Condition field "${condition.field}" does not exist in any of the input items. Please check your condition field names.`,
+					);
+				}
+			}
+		}
+		
 		return items.map((item, itemIndex) => {
 			let match = true;
 			
@@ -845,6 +858,17 @@ export class JsonCrud implements INodeType {
 		const caseSensitive = this.getNodeParameter('deleteCaseSensitive', 0) as boolean;
 		
 		if (!conditions.conditions?.length) return items;
+		
+		// Validate that all condition fields exist in at least one item
+		for (const condition of conditions.conditions) {
+			const fieldExists = items.some(item => condition.field in item.json);
+			if (!fieldExists) {
+				throw new NodeOperationError(
+					this.getNode(),
+					`Condition field "${condition.field}" does not exist in any of the input items. Please check your condition field names.`,
+				);
+			}
+		}
 		
 		return items.filter(item => {
 			const results = conditions.conditions.map((c: any) => {

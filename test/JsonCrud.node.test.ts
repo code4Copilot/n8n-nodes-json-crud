@@ -758,6 +758,93 @@ describe('JsonCrud Node', () => {
         expect(result[0][2].json.role).toBe('user');
       });
     });
+
+    describe('Error Handling - Condition Field Not Exists', () => {
+      test('should throw error when condition field does not exist', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: '張三', department: '技術部', salary: 50000 } },
+          { json: { name: '李四', department: '業務部', salary: 45000 } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'nonExistentField', operator: 'equals', value: '技術部' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: false,
+          fieldsToUpdate: {
+            fields: [{ name: 'salary', value: '60000' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+
+        await expect(jsonCrud.execute.call(mockThis)).rejects.toThrow(
+          'Condition field "nonExistentField" does not exist in any of the input items'
+        );
+      });
+
+      test('should throw error when one of multiple condition fields does not exist', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: '張三', department: '技術部', salary: 50000 } },
+          { json: { name: '李四', department: '業務部', salary: 45000 } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'department', operator: 'equals', value: '技術部' },
+              { field: 'invalidField', operator: 'greaterThan', value: '40000' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: false,
+          fieldsToUpdate: {
+            fields: [{ name: 'salary', value: '60000' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+
+        await expect(jsonCrud.execute.call(mockThis)).rejects.toThrow(
+          'Condition field "invalidField" does not exist in any of the input items'
+        );
+      });
+
+      test('should allow update fields that do not exist (for adding new calculated fields)', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: '張三', salary: 50000 } },
+          { json: { name: '李四', salary: 45000 } },
+        ];
+
+        const parameters = {
+          operation: 'update',
+          updateMode: 'condition',
+          updateConditions: {
+            conditions: [
+              { field: 'salary', operator: 'greaterThan', value: '40000' },
+            ],
+          },
+          updateConditionLogic: 'and',
+          updateCaseSensitive: false,
+          fieldsToUpdate: {
+            fields: [{ name: 'newCalculatedField', value: '100' }],
+          },
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+        const result = await jsonCrud.execute.call(mockThis);
+
+        expect(result[0][0].json.newCalculatedField).toBe('100');
+        expect(result[0][1].json.newCalculatedField).toBe('100');
+      });
+    });
   });
 
   describe('DELETE Operation - By Condition', () => {
@@ -971,6 +1058,59 @@ describe('JsonCrud Node', () => {
 
         expect(result[0]).toHaveLength(1);
         expect(result[0][0].json.name).toBe('Jane Smith');
+      });
+    });
+
+    describe('Error Handling - Condition Field Not Exists', () => {
+      test('should throw error when condition field does not exist', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: '張三', status: '在職' } },
+          { json: { name: '李四', status: '離職' } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'nonExistentField', operator: 'equals', value: '離職' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+
+        await expect(jsonCrud.execute.call(mockThis)).rejects.toThrow(
+          'Condition field "nonExistentField" does not exist in any of the input items'
+        );
+      });
+
+      test('should throw error when one of multiple condition fields does not exist', async () => {
+        const inputData: INodeExecutionData[] = [
+          { json: { name: '張三', department: '技術部', salary: 50000 } },
+          { json: { name: '李四', department: '業務部', salary: 45000 } },
+        ];
+
+        const parameters = {
+          operation: 'delete',
+          deleteMode: 'condition',
+          deleteConditions: {
+            conditions: [
+              { field: 'department', operator: 'equals', value: '技術部' },
+              { field: 'wrongFieldName', operator: 'lessThan', value: '48000' },
+            ],
+          },
+          deleteConditionLogic: 'and',
+          deleteCaseSensitive: false,
+        };
+
+        const mockThis = createMockExecuteFunctions(parameters, inputData);
+
+        await expect(jsonCrud.execute.call(mockThis)).rejects.toThrow(
+          'Condition field "wrongFieldName" does not exist in any of the input items'
+        );
       });
     });
   });
