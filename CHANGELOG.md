@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-01-16
+
+### Added
+- **Automatic Type Conversion**: 新增智慧型態轉換功能
+  - 自動將字串數字轉換為數字型態（整數、小數、負數）
+  - 自動將字串布林值轉換為布林型態（"true"/"false"）
+  - 自動將字串 null/undefined 轉換為實際的 null/undefined
+  - 自動將 ISO 日期字串轉換為 Date 物件
+  - 自動解析 JSON 格式的物件和陣列字串
+  - 應用於所有 Filter、Update、Delete 操作的條件值和更新值
+
+### Improved
+- **User Experience**: 大幅提升使用者體驗
+  - 使用者不需要手動轉換型態
+  - 介面輸入值會自動識別並轉換為正確的型態
+  - 減少型態不匹配導致的錯誤
+  - 更直覺的操作方式
+
+### Tests
+- 新增 28 個型態轉換相關的單元測試：
+  - Filter 操作型態轉換測試（6 個）
+  - Update 操作型態轉換測試（5 個）
+  - Cell Update 操作型態轉換測試（3 個）
+  - Delete 操作型態轉換測試（2 個）
+  - 邊界情況和特殊值處理測試（12 個）
+- 測試總數：74 個（全部通過 ✅）
+
 ## [1.1.2] - 2026-01-09
 
 ### Added
@@ -71,6 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 支援表達式計算
 - 分組統計功能
 
+[1.1.3]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/code4Copilot/n8n-nodes-json-crud/compare/v1.0.2...v1.1.0

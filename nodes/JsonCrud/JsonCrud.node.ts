@@ -485,6 +485,77 @@ export class JsonCrud implements INodeType {
 		return input;
 	}
 
+	/**
+	 * Intelligent value type conversion
+	 * Automatically converts string inputs to appropriate types:
+	 * - Numbers (integers and decimals)
+	 * - Booleans (true/false)
+	 * - null and undefined
+	 * - ISO date strings to Date objects
+	 * - JSON objects and arrays
+	 */
+	private parseValue(value: any): any {
+		// If not a string, return as-is
+		if (typeof value !== 'string') {
+			return value;
+		}
+
+		const trimmed = value.trim();
+
+		// Handle empty string
+		if (trimmed === '') {
+			return '';
+		}
+
+		// Handle null
+		if (trimmed === 'null') {
+			return null;
+		}
+
+		// Handle undefined
+		if (trimmed === 'undefined') {
+			return undefined;
+		}
+
+		// Handle booleans
+		if (trimmed === 'true') {
+			return true;
+		}
+		if (trimmed === 'false') {
+			return false;
+		}
+
+		// Handle numbers (integers and decimals, including negative)
+		// Use a stricter regex to avoid false positives
+		if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
+			const num = Number(trimmed);
+			if (!isNaN(num)) {
+				return num;
+			}
+		}
+
+		// Handle ISO date strings (e.g., 2026-01-16, 2026-01-16T10:30:00Z)
+		if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?)?$/.test(trimmed)) {
+			const date = new Date(trimmed);
+			if (!isNaN(date.getTime())) {
+				return date;
+			}
+		}
+
+		// Try to parse as JSON (objects, arrays)
+		if ((trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+				(trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+			try {
+				return JSON.parse(trimmed);
+			} catch {
+				// If parsing fails, return as string
+			}
+		}
+
+		// Return as string if no conversion applies
+		return value;
+	}
+
 	private async handleCreate(this: IExecuteFunctions, items: INodeExecutionData[]): Promise<INodeExecutionData[]> {
 		const instance = new JsonCrud();
 		// Don't specify type here, let simplifyInput handle it
@@ -520,13 +591,14 @@ export class JsonCrud implements INodeType {
 		const filterConditions = this.getNodeParameter('filterConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('conditionLogic', 0) as string;
 		const caseSensitive = this.getNodeParameter('filterCaseSensitive', 0) as boolean;
+		const instance = new JsonCrud();
 		
 		if (!filterConditions.conditions?.length) return items;
 
 		return items.filter((item) => {
 			const results = filterConditions.conditions.map((c: any) => {
 				const val = item.json[c.field];
-				const compareVal = c.value;
+				const compareVal = instance.parseValue(c.value);
 				
 				switch (c.operator) {
 					case 'equals': {
@@ -678,6 +750,7 @@ export class JsonCrud implements INodeType {
 		const conditions = this.getNodeParameter('updateConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('updateConditionLogic', 0) as string;
 		const caseSensitive = this.getNodeParameter('updateCaseSensitive', 0) as boolean;
+		const instance = new JsonCrud();
 		
 		// Validate that all condition fields exist in at least one item
 		if (conditions.conditions?.length) {
@@ -699,7 +772,7 @@ export class JsonCrud implements INodeType {
 			if (conditions.conditions?.length) {
 				const results = conditions.conditions.map((c: any) => {
 					const val = item.json[c.field];
-					const compareVal = c.value;
+					const compareVal = instance.parseValue(c.value);
 					
 					switch (c.operator) {
 						case 'equals': {
@@ -772,7 +845,7 @@ export class JsonCrud implements INodeType {
 				const fields = this.getNodeParameter('fieldsToUpdate', itemIndex) as any;
 				if (fields.fields) {
 					fields.fields.forEach((f: any) => { 
-						item.json[f.name] = f.value; 
+						item.json[f.name] = instance.parseValue(f.value); 
 					});
 				}
 			}
@@ -793,7 +866,7 @@ export class JsonCrud implements INodeType {
 			if (rowIndices.includes(index)) {
 				// Get the new value for THIS specific item (to evaluate expressions per item)
 				const newValue = this.getNodeParameter('cellValue', index) as string;
-				item.json[fieldName] = newValue;
+				item.json[fieldName] = instance.parseValue(newValue);
 			}
 			return item;
 		});
@@ -856,6 +929,7 @@ export class JsonCrud implements INodeType {
 		const conditions = this.getNodeParameter('deleteConditions', 0) as any;
 		const conditionLogic = this.getNodeParameter('deleteConditionLogic', 0) as string;
 		const caseSensitive = this.getNodeParameter('deleteCaseSensitive', 0) as boolean;
+		const instance = new JsonCrud();
 		
 		if (!conditions.conditions?.length) return items;
 		
@@ -873,7 +947,7 @@ export class JsonCrud implements INodeType {
 		return items.filter(item => {
 			const results = conditions.conditions.map((c: any) => {
 				const val = item.json[c.field];
-				const compareVal = c.value;
+				const compareVal = instance.parseValue(c.value);
 				
 				switch (c.operator) {
 					case 'equals': {
