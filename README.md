@@ -1,5 +1,7 @@
 # n8n-nodes-json-crud
 
+> **2026-02-21 v1.1.5 更新：Cell Position Row Index 欄位允許空白，UI 不再強制要求填值，空白時會自動讀取所有資料。建議所有用戶升級。**
+
 This is an n8n community node that allows you to easily perform CRUD (Create, Read, Update, Delete) operations on JSON data.
 
 **Especially suitable for handling JSON data converted from Excel!**

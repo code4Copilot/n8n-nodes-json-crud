@@ -76,7 +76,7 @@ export class JsonCrud implements INodeType {
 				type: 'string',
 				displayOptions: { show: { operation: ['read'], readMode: ['cell'] } },
 				default: '0',
-				required: true,
+				required: false,
 				description: 'Row index to read (0-based). Supports single (0), range (0-5), or multiple (0,2,4)',
 				placeholder: 'e.g., 0 or 0-5 or 0,2,4',
 			},

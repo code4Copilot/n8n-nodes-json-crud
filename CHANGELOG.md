@@ -1,4 +1,15 @@
 # Changelog
+## [1.1.5] - 2026-02-21
+
+### Fixed
+- **Row Index 必填限制移除**：Cell Position 模式下，Row Index 欄位允許空白，空白時會自動讀取所有資料。
+- 與 1.1.4 行為一致，但 UI 不再強制要求填值。
+
+### Internal
+- 更新欄位 required 屬性，提升使用體驗。
+
+### Upgrade
+- 建議所有用戶升級至 1.1.5 以獲得最佳體驗。
 
 All notable changes to this project will be documented in this file.
 
