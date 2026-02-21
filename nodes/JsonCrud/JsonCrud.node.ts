@@ -706,8 +706,10 @@ export class JsonCrud implements INodeType {
 
 		const instance = new JsonCrud();
 
-		// Parse row indices
-		const rowIndices = instance.parseRowIndices(rowIndexStr, items.length);
+		// Row Index 空白時，取所有 index
+		const rowIndices = rowIndexStr.trim() === ''
+			? items.map((_, i) => i)
+			: instance.parseRowIndices(rowIndexStr, items.length);
 
 		// Parse field names (if specified)
 		const fieldNames = fieldNamesStr 

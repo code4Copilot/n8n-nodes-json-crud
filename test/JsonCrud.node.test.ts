@@ -515,6 +515,31 @@ describe('JsonCrud Node', () => {
       expect(result[0][0].json.name).toBe('張三');
       expect(result[0][1].json.name).toBe('王五');
     });
+
+    test('should read all rows when Row Index is blank', async () => {
+      const inputData: INodeExecutionData[] = [
+        { json: { name: '張三', age: 30 } },
+        { json: { name: '李四', age: 25 } },
+        { json: { name: '王五', age: 28 } },
+        { json: { name: '趙六', age: 35 } },
+      ];
+
+      const parameters = {
+        operation: 'read',
+        readMode: 'cell',
+        readRowIndex: '', // 空白
+        readFieldNames: '',
+      };
+
+      const mockThis = createMockExecuteFunctions(parameters, inputData);
+      const result = await jsonCrud.execute.call(mockThis);
+
+      expect(result[0]).toHaveLength(4);
+      expect(result[0][0].json.name).toBe('張三');
+      expect(result[0][1].json.name).toBe('李四');
+      expect(result[0][2].json.name).toBe('王五');
+      expect(result[0][3].json.name).toBe('趙六');
+    });
   });
 
   describe('READ Operation - Sort', () => {
